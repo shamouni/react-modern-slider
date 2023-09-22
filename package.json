@@ -1,7 +1,9 @@
 {
   "name": "react-modern-slider",
+  "author": "Amin Shamouni (https://shamouni.github.io)",
+  "license": "MIT",
   "private": false,
-  "version": "0.0.2",
+  "version": "0.0.5",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
@@ -23,14 +25,16 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shamouni/react-modern-slider.git"
+  },
   "keywords": [
     "Slideshow",
     "Image slider",
     "React slideshow",
     "React image carousel"
   ],
-  "author": "Amin Shamouni (https://shamouni.github.io)",
-  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -41,7 +45,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-modern-slider": "^0.0.0"
+    "react-indiana-drag-scroll": "^2.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.18",
