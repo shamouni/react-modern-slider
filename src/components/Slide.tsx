@@ -49,7 +49,7 @@ export const Slide = (props: TProps) => {
 
   return (
     <div className={`box brd ${hc} ${brd} ${fc}`}>
-      <img width="960" height="615" src={`${src}`} alt="" />
+      <img width="960" height="615" src={`${src}`} alt="" role="img" />
       <a className="link" href={link}>
         {" "}
       </a>
@@ -63,3 +63,5 @@ export const Slide = (props: TProps) => {
     </div>
   );
 };
+
+export default Slide;

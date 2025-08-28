@@ -89,7 +89,12 @@ export const Slider = (props: TProps) => {
 
   return (
     <section className="slider">
-      <div id="prev-slide" className="arrow-slide"></div>
+      <button
+        id="prev-slide"
+        className="arrow-slide"
+        role="button"
+        aria-label="prev"
+      />
 
       <div id="slides" className="slider-container">
         <ScrollContainer className="scroll-container">
@@ -97,7 +102,12 @@ export const Slider = (props: TProps) => {
         </ScrollContainer>
       </div>
 
-      <div id="next-slide" className="arrow-slide"></div>
+      <button
+        id="next-slide"
+        className="arrow-slide"
+        role="button"
+        aria-label="next"
+      />
     </section>
   );
 };
