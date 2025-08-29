@@ -15,50 +15,42 @@ type TProps = {
 
 export const Slide = (props: TProps) => {
   const {
-    height,
-    title = "",
+    title,
     text = "",
-    src = "",
+    src,
     link = "#",
-    lbl = "",
-    color = "",
+    lbl,
+    color,
     fontSize = "small",
+    height,
     borderTop,
     borderBottom,
     borderLeft,
     borderRight,
   } = props;
 
-  let borders = [];
-  if (borderTop) {
-    borders.push("brd-top");
-  }
-  if (borderBottom) {
-    borders.push("brd-bottom");
-  }
-  if (borderLeft) {
-    borders.push("brd-left");
-  }
-  if (borderRight) {
-    borders.push("brd-right");
-  }
-  const brd = borders.join(" ");
+  const borderClasses = [
+    borderTop && "brd-top",
+    borderBottom && "brd-bottom",
+    borderLeft && "brd-left",
+    borderRight && "brd-right",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-  const hc = height ? `h-${height}` : "";
-  const fc = fontSize === "large" ? "box-large" : "";
+  const heightClass = height ? `h-${height}` : "";
+  const fontClass = fontSize === "large" ? "box-large" : "";
 
   return (
-    <div className={`box brd ${hc} ${brd} ${fc}`}>
-      <img width="960" height="615" src={`${src}`} alt="" role="img" />
-      <a className="link" href={link}>
-        {" "}
-      </a>
+    <div className={`box brd ${heightClass} ${borderClasses} ${fontClass}`}>
+      <img width={960} height={615} src={src} alt={title} role="img" />
+
+      {link && <a className="link" href={link} aria-label={title}></a>}
+
       <div className="text">
         <span className={`lbl ${color}`}>{lbl}</span>
-        <h4 className="bold">
-          <a href={link}>{title}</a>
-        </h4>
-        {text !== "" && <p>{text}</p>}
+        <h4 className="bold">{link ? <a href={link}>{title}</a> : title}</h4>
+        {text && <p>{text}</p>}
       </div>
     </div>
   );

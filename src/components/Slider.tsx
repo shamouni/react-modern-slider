@@ -1,112 +1,100 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useCallback } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import "../index.css";
-
-import { useEffect } from "react";
-
-let Handle: any;
-const gap = 2;
 
 type TProps = {
   children: ReactNode;
   delay?: number;
 };
 
-export const Slider = (props: TProps) => {
-  const { delay = 0 } = props;
+export const Slider = ({ children, delay = 0 }: TProps) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   const time = delay > 3000 ? delay : 3000;
+  const gap = 2;
+
+  const slide = useCallback(
+    (dir: "next" | "prev" = "next", loop = true) => {
+      const slider = scrollContainerRef.current;
+      if (!slider) return;
+
+      const slideWidth = window.innerWidth / 1.1;
+      const l = slider.scrollLeft;
+      const scrollEnd = slider.scrollWidth - slider.offsetWidth;
+
+      if (dir === "next") {
+        slider.scrollLeft = l + gap < scrollEnd ? l + slideWidth : 0;
+      } else {
+        slider.scrollLeft = l - gap > 0 ? l - slideWidth : slider.scrollWidth;
+      }
+
+      if (timerRef.current) clearTimeout(timerRef.current);
+
+      if (loop) {
+        timerRef.current = setTimeout(() => slide("next"), time);
+      }
+    },
+    [time]
+  );
+
+  const startSlider = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (window.innerWidth > 1200) {
+      timerRef.current = setTimeout(() => slide("next"), time);
+    }
+  }, [slide, time]);
 
   useEffect(() => {
-    if (delay) {
-      initialize();
-    }
+    const container = containerRef.current;
+    if (!container) return;
 
-    return () => {
-      unbind();
-    };
-    // eslint-disable-next-line
-  }, []);
+    const handleBlur = () => timerRef.current && clearTimeout(timerRef.current);
 
-  const initialize = () => {
-    const container = document.querySelector(
-      ".slider-container"
-    ) as HTMLDivElement;
-
-    window.addEventListener("load", startSlider);
     window.addEventListener("resize", startSlider);
-
-    window.addEventListener("blur", () => clearTimeout(Handle));
+    window.addEventListener("blur", handleBlur);
     window.addEventListener("focus", startSlider);
 
-    container.addEventListener("mouseenter", () => clearTimeout(Handle));
+    container.addEventListener("mouseenter", handleBlur);
     container.addEventListener("mouseleave", startSlider);
 
-    const prev = document.getElementById("prev-slide") as HTMLElement;
-    const next = document.getElementById("next-slide") as HTMLElement;
+    startSlider();
 
-    prev.addEventListener("click", () => slide("prev", false));
-    next.addEventListener("click", () => slide("next", false));
-  };
+    return () => {
+      window.removeEventListener("resize", startSlider);
+      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("focus", startSlider);
 
-  const unbind = () => {
-    window.removeEventListener("load", startSlider);
-    window.removeEventListener("resize", startSlider);
+      container.removeEventListener("mouseenter", handleBlur);
+      container.removeEventListener("mouseleave", startSlider);
 
-    window.removeEventListener("blur", () => clearTimeout(Handle));
-    window.removeEventListener("focus", startSlider);
-  };
-
-  const slide = (dir = "next", loop = true) => {
-    const slider = document.querySelector(
-      ".scroll-container"
-    ) as HTMLDivElement;
-
-    const slideWidth = window.screen.availWidth / 1.1;
-
-    const l = slider.scrollLeft;
-    const scrollEnd = slider.scrollWidth - slider.offsetWidth;
-
-    if (dir === "next") {
-      slider.scrollLeft = l + gap < scrollEnd ? l + slideWidth : 0;
-    } else {
-      slider.scrollLeft = l - gap > 0 ? l - slideWidth : slider.scrollWidth;
-    }
-
-    clearTimeout(Handle);
-
-    if (loop) {
-      Handle = setTimeout(slide, time);
-    }
-  };
-
-  function startSlider() {
-    clearTimeout(Handle);
-
-    if (window.screen.availWidth > 1200) {
-      Handle = setTimeout(slide, time);
-    }
-  }
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [startSlider]);
 
   return (
     <section className="slider">
       <button
-        id="prev-slide"
         className="arrow-slide"
         role="button"
         aria-label="prev"
+        onClick={() => slide("prev", false)}
       />
 
-      <div id="slides" className="slider-container">
-        <ScrollContainer className="scroll-container">
-          {props.children}
-        </ScrollContainer>
+      <div ref={containerRef} className="slider-container">
+        <div ref={scrollContainerRef}>
+          <ScrollContainer className="scroll-container">
+            {children}
+          </ScrollContainer>
+        </div>
       </div>
 
       <button
-        id="next-slide"
         className="arrow-slide"
         role="button"
         aria-label="next"
+        onClick={() => slide("next", false)}
       />
     </section>
   );

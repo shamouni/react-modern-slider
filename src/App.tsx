@@ -7,7 +7,7 @@ const App = () => {
     "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptate, explicabo, laudantium illo eius sed, deleniti earum architecto reprehenderit";
 
   return (
-    <Slider>
+    <Slider delay={12000}>
       <VBox width="3">
         <Slide
           height="3"
@@ -141,7 +141,7 @@ const App = () => {
       <VBox width="6">
         <HBox height="3">
           <Slide
-            title="Beautiful landscape77777777"
+            title="Beautiful landscape"
             src={`${Dir}/s-26.jpg`}
             lbl="Sport"
             color="purple"
