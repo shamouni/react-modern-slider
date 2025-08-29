@@ -1,15 +1,15 @@
 body {
-  font: 1em "tahoma";
-  background-color: whitesmoke;
   margin: 0;
 }
-
 .slider {
   display: block;
+  font: 1em "tahoma";
   margin: 0 auto;
   height: 100vh;
   max-height: 42vw;
   min-height: 500px;
+  width: 100%;
+  overflow: hidden;
   background-color: #000;
   color: white;
   position: relative;
